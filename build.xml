@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<project name="WNTools" default="dist" basedir=".">
+
+	<description>
+		WNTools: A Suite of Easy-to-Use tools based on WordNet
+	</description>
+
+	<property name="src" location="src" />
+	<property name="bin" location="bin" />
+	<property name="dist" location="dist" />
+	<property name="version.num" value="0.1" />
+	<tstamp>
+		<format property="TODAY" pattern="yyyy-MM-dd HH:mm:ss" />
+	</tstamp>
+
+	<target name="init" description="create the bin folder">
+		<mkdir dir="${bin}" />
+	</target>
+
+	<target name="compile" depends="init" description="compile the java files">
+		<javac includeantruntime="true" srcdir="${src}" destdir="${bin}" />
+	</target>
+
+	<target name="initdist" description="create the dist folder">
+		<mkdir dir="${dist}" />
+	</target>
+
+	<target name="copyreadme" depends="initdist" description="copy the readme and license">
+		<copy file="README.md" tofile="${dist}/readme.txt" />
+		<copy file="LICENSE.md" tofile="${dist}/license.txt" />
+	</target>
+
+	<target name="dist" depends="compile,copyreadme" description="create the jar file">
+		<jar jarfile="${dist}/WNTools.jar" basedir="${bin}">
+			<manifest>
+				<attribute name="Main-Class" value="wntools.WordNetController" />
+				<attribute name="Class-Path" value="." />
+				<attribute name="Version" value="${version.num}" />
+				<attribute name="Built-Date" value="${TODAY}" />
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="createziprelease" depends="dist" description="create the zip file of the release">
+		<zip destfile="${dist}/WNTools_v${version.num}.zip">
+			<zipfileset dir="${dist}" excludes="*.zip" />
+		</zip>
+	</target>
+
+	<target name="clean" description="delete all build directories">
+		<delete dir="${bin}" />
+		<delete dir="${dist}" />
+	</target>
+
+</project>
+
+
